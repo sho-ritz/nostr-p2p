@@ -11,18 +11,14 @@ export const EVENT_KIND = 25050
 export const RELAYS_PER_ROOM = 5
 
 /**
- * Candidate relays. Must accept ephemeral events; verified by the scheduled relay check.
- * Placeholder list: to be validated before v0.1.
+ * Candidate relays. Must forward ephemeral events; verified by `npm run smoke:public`.
  */
 export const DEFAULT_RELAYS: readonly string[] = [
   'wss://relay.damus.io',
-  'wss://nos.lol',
-  'wss://relay.nostr.band',
   'wss://relay.primal.net',
-  'wss://nostr.mom',
-  'wss://relay.snort.social',
+  'wss://relay.nostr.net',
   'wss://offchain.pub',
-  'wss://nostr.wine',
+  'wss://relay.snort.social',
 ]
 
 export const DEFAULT_ICE_SERVERS: readonly RTCIceServer[] = [
@@ -39,3 +35,9 @@ export const DEFAULT_HEARTBEAT = {
   relayIntervalMs: 30_000,
   relayTimeoutMs: 90_000,
 } as const
+
+/** How long `direct` mode waits for a data channel before DIRECT_CONNECT_FAILED. */
+export const DIRECT_CONNECT_TIMEOUT_MS = 15_000
+
+/** Chunk size for application data (bytes of encoded payload per frame). */
+export const CHUNK_SIZE = 16 * 1024

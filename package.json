@@ -1,6 +1,6 @@
 {
   "name": "nostr-p2p",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Serverless P2P over nostr relays: WebRTC with automatic encrypted relay fallback.",
   "type": "module",
   "license": "MIT",
@@ -9,7 +9,13 @@
     "type": "git",
     "url": "git+https://github.com/sho-ritz/nostr-p2p.git"
   },
-  "keywords": ["nostr", "p2p", "webrtc", "serverless", "relay"],
+  "keywords": [
+    "nostr",
+    "p2p",
+    "webrtc",
+    "serverless",
+    "relay"
+  ],
   "engines": {
     "node": ">=22"
   },
@@ -21,14 +27,18 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "PROTOCOL.md"],
+  "files": [
+    "dist",
+    "PROTOCOL.md"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+    "prepublishOnly": "npm run typecheck && npm test && npm run build",
+    "smoke:public": "npm run build && node examples/public-smoke.mjs"
   },
   "dependencies": {
     "@noble/hashes": "^2.4.0",
@@ -36,7 +46,10 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
+    "@types/ws": "^8.18.2",
+    "node-datachannel": "^0.33.6",
     "typescript": "^7.0.2",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "ws": "^8.22.2"
   }
 }

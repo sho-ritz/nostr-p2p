@@ -1,16 +1,11 @@
-name: CI
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-
+name: ci
+on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [22, 24]
+        node: [22.x, 24.x]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

@@ -47,6 +47,8 @@ export interface RoomOptions {
   maxPeers?: number
   relayLimits?: RelayLimits
   heartbeat?: HeartbeatOptions
+  /** WebSocket implementation (defaults to globalThis.WebSocket; Node 22+ has one). */
+  WebSocket?: new (url: string) => WebSocket
 }
 
 export type MessageHandler = (data: Payload, peer: Peer) => void
@@ -76,7 +78,7 @@ export type P2PErrorCode =
 
 export interface P2PError extends Error {
   code: P2PErrorCode
-  peer?: Peer
+  peer: Peer | undefined
 }
 
 export interface RoomEvents {
