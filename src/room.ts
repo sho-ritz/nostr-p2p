@@ -202,8 +202,17 @@ export class RoomImpl implements Room {
     this.#pool.publish(this.#key.sign({ kind: EVENT_KIND, tags: [['d', this.roomId], ['p', to]], content }))
   }
 
+  /** Recently seen event ids: every event arrives once per relay. */
+  readonly #seen = new Set<string>()
+
   #onEvent(e: NostrEvent): void {
     if (this.#closed || e.kind !== EVENT_KIND || e.pubkey === this.selfId) return
+    if (this.#seen.has(e.id)) return
+    this.#seen.add(e.id)
+    if (this.#seen.size > 5000) {
+      const oldest = this.#seen.values().next().value
+      if (oldest !== undefined) this.#seen.delete(oldest)
+    }
     const p = e.tags.find((t) => t[0] === 'p')?.[1]
     if (p && p !== this.selfId) return
     if (!verify(e)) return

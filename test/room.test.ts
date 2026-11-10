@@ -42,6 +42,20 @@ describe('nostr-p2p rooms', () => {
     expect(got[1]).toEqual(new Uint8Array([1, 2, 255]))
   })
 
+  it('connects through several relays (every event arrives once per relay)', async () => {
+    const r1 = await relay()
+    const r2 = await relay()
+    const r3 = await relay()
+    const relays = [r1.url, r2.url, r3.url]
+    const a = join(r1, { relays })
+    const b = join(r1, { relays })
+    await until(() => a.peers[0]?.transport === 'direct' && b.peers[0]?.transport === 'direct', 15000, 'direct via 3 relays')
+    const got = inbox(b)
+    for (let i = 0; i < 5; i++) await a.send(i)
+    await until(() => got.length === 5)
+    expect(got).toEqual([0, 1, 2, 3, 4])
+  })
+
   it('chunks large messages and preserves order per channel', async () => {
     const r = await relay()
     const a = join(r)
@@ -91,11 +105,10 @@ describe('nostr-p2p rooms', () => {
     join(r, { transport: 'relay' })
     await until(() => errors.includes('TRANSPORT_MISMATCH'))
 
+    // Whoever arrives last is refused; with simultaneous joins that is either newcomer.
     const full: string[] = []
     const x = join(r, { maxPeers: 2 }, 'small')
-    join(r, { maxPeers: 2 }, 'small')
-    const z = join(r, { maxPeers: 2 }, 'small')
-    z.on('error', (e) => full.push(e.code))
+    for (const late of [join(r, { maxPeers: 2 }, 'small'), join(r, { maxPeers: 2 }, 'small')]) late.on('error', (e) => full.push(e.code))
     await until(() => full.includes('ROOM_FULL'))
     expect(x.peers).toHaveLength(1)
 

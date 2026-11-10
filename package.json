@@ -1,6 +1,6 @@
 {
   "name": "nostr-p2p",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Serverless P2P over nostr relays: WebRTC with automatic encrypted relay fallback.",
   "type": "module",
   "license": "MIT",
